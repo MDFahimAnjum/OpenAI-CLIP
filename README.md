@@ -1,3 +1,19 @@
+## Update (January 2025)
+I have added the original loss calculation to the model with detailed explanations.
+
+
+### Additional Meterials:
+- [Understanding OpenAI’s CLIP model](https://medium.com/@paluchasz/understanding-openais-clip-model-6b52bade3fa3)
+- [Learning Transferable Visual Models From Natural Language Supervision paper](https://arxiv.org/abs/2103.00020)
+- [CLIP Paper Explained Easily in 3 Levels of Detail](https://medium.com/one-minute-machine-learning/clip-paper-explained-easily-in-3-levels-of-detail-61959814ad13)
+
+
+### Notable Successors and Inspired Models
+- **[ALIGN](https://arxiv.org/abs/2102.05918):** Google’s adaptation of CLIP, using larger datasets and simpler architectures.
+- **[Florence](https://arxiv.org/abs/2111.11432):** A model by Microsoft, focusing on domain generality and vision-language understanding.
+- **[Flamingo](https://arxiv.org/abs/2204.14198):** DeepMind’s extension for video-text tasks.
+- **DALL·E:** Leveraging CLIP-like representations for text-to-image generation.
+
 ## Update (December 2023)
 
 I am happy to find out that this code has been used and cited in the following papers:
@@ -34,7 +50,13 @@ year = {2021}
 
 It was in January of 2021 that **OpenAI** announced two new models: **DALL-E** and **CLIP**, both **multi-modality** models connecting **texts and images** in some way. In this article we are going to implement CLIP model from scratch in **PyTorch**. OpenAI has open-sourced some of the code relating to CLIP model but I found it intimidating and it was far from something short and simple. I also came across a good tutorial inspired by CLIP model on Keras code examples and I translated some parts of it into PyTorch to build this tutorial totally with our beloved PyTorch!
 
+
 ### What does CLIP do? Why is it fun?
+
+- CLIP: Contrastive Language-Image Pre-training, is a model for calculating how good a given image and a given text caption fit together.
+- In training, it tries to maximize the “cosine similarity” between correct image-text embedding pairs , and minimize the similarity scores between all incorrect pairs.
+- It aligns text and image embeddings by first projecting them on a common embedding space then minimizing contrastive loss
+- In inference, it calculates the similarity scores between the embedding of a given image with embeddings from a given list of possible texts, and picks the text with the highest similarity.
 
 In [Learning Transferable Visual Models From Natural Language Supervision paper](https://arxiv.org/abs/2103.00020), OpenAI introduces their new model which is called **CLIP**, for **Contrastive Language-Image Pre-training**. In a nutshell, this model learns the relationship between a whole sentence and the image it describes; in a sense that when the model is trained, given an input sentence it will be able to retrieve the most related images corresponding to that sentence. The important thing here is that it is trained on full sentences instead of single classes like car, dog, etc. The intuition is that when trained on whole sentences, the model can learn a lot more things and finds some pattern between images and texts.
 They also show that when this model is trained on a huge dataset of images and their corresponding texts, it can also act as a classifier too. I encourage you to study the paper to learn more about this exciting model and their astonishing results on benchmarking datasets . To mention just one, CLIP model trained with this strategy classifies ImageNet better than those SOTA models trained on the ImageNet itself optimized for the only task of classification!
@@ -560,3 +582,85 @@ find_matches(model,
 ## Final words
 
 I hope you have enjoyed this article. Implementing this paper was a really interesting experience for me. I want to thank Khalid Salama for the great Keras code example he provided which inspired me to write something similar in PyTorch.
+
+
+## Improvements
+Since the release of the original CLIP model by OpenAI, several advancements have been made to improve its performance, usability, and application across various domains. These advancements typically focus on enhancing the model architecture, training methodologies, and domain adaptability. Here are some notable areas of improvement:
+
+
+1. **Architecture Enhancements**
+   - **Vision Transformers (ViTs):**  
+      - CLIP originally used ResNet and Vision Transformers for the image encoder. Subsequent research explored deeper or hierarchical ViT architectures to better capture multi-scale image features.
+      - Models like **Florence** and **ALIGN** introduced improvements in transformer-based encoders for vision and multimodal tasks.
+   - **Cross-Attention Mechanisms:**  
+      - Adding cross-attention layers between text and image embeddings to enhance multimodal feature fusion.
+      - Models like **Flamingo** (by DeepMind) utilize such mechanisms for better image-text alignment.
+
+
+2. **Loss Function Improvements**
+   - **Decoupled Contrastive Loss:**  
+      - Separate contrastive losses for different modalities to focus more effectively on their unique characteristics.
+   - **Fine-Grained Matching:**  
+      - Loss functions that emphasize fine-grained alignments, e.g., aligning specific objects in an image with corresponding phrases in text.
+
+
+3. **Training on Larger and Diverse Datasets**
+   - **LAION Datasets:**  
+      - The LAION project curated massive open datasets (e.g., LAION-400M, LAION-5B) with hundreds of millions of image-text pairs, enabling better generalization and fine-tuning opportunities.
+   - **Multi-Lingual Training:**  
+      - Extensions to train on multilingual datasets for broader applicability (e.g., **mCLIP**).
+   - **Domain-Specific Datasets:**  
+      - Adaptations of CLIP for domains like healthcare, remote sensing, and gaming by fine-tuning on task-specific datasets.
+
+
+4. **Specialized Variants**
+   - **OpenCLIP:**  
+      - An open-source implementation designed for broader experimentation, including support for custom datasets and architectures.
+   - **CLIPSeg:**  
+      - A variant of CLIP fine-tuned for segmentation tasks, demonstrating its versatility in image understanding beyond classification and retrieval.
+   - **CLIPA:**  
+      - Models designed for **audio-visual alignment**, extending CLIP's functionality to the audio domain.
+
+
+5. **Incorporation of Additional Modalities**
+   - **Video CLIP:**  
+      - Adapting CLIP for video tasks by introducing temporal encoders and aligning text with video frames.
+   - **Text-to-3D Models:**  
+      - Extensions for creating 3D objects from text, leveraging CLIP’s rich text-image understanding.
+   - **Audio-CLIP:**  
+      - Models integrating audio encoders for tasks like audio-caption alignment and audio-visual retrieval.
+
+
+6. **Efficiency and Optimization**
+   - **Efficient Training Strategies:**  
+      - Techniques like **progressive training**, **low-rank adaptation (LoRA)**, and **adapter layers** reduce computational costs while maintaining performance.
+   - **Distillation and Pruning:**  
+      - Distilling CLIP into smaller, faster models for deployment on edge devices and mobile platforms.
+
+
+7. **Applications and Domain Adaptation**
+   - **Zero-Shot Transfer Learning:**  
+      - Improvements in zero-shot generalization through better pretraining strategies.
+   - **Prompt Engineering:**  
+      - Exploring optimal ways to design text prompts to enhance performance across tasks.
+   - **Robustness to Domain Shifts:**  
+      - Fine-tuning to improve robustness in domains like medical imaging, satellite data, or artistic styles.
+
+
+8. **Alignment and Fairness**
+   - **Bias Mitigation:**  
+      - Researchers have analyzed biases in the original CLIP model and proposed strategies for debiasing, including better dataset curation and bias-regularized training.
+   - **Ethical Considerations:**  
+      - Addressing misuse and ensuring CLIP is used responsibly, particularly in tasks involving sensitive or high-stakes decision-making.
+
+
+9. **Cross-Domain Applications**
+   - **Text-to-Image Generation (Diffusion Models):**  
+      - Using CLIP as a scoring mechanism for guiding text-to-image generation models like **DALL·E**, **Stable Diffusion**, and **MidJourney**.
+   - **Image Editing:**  
+      - CLIP is widely used for text-guided image manipulation and inpainting.
+   - **Robotics and Navigation:**  
+      - CLIP has been adapted for vision-based navigation and robotics applications, where understanding contextual information is crucial.
+
+
+These advancements reflect the versatility of the CLIP framework and its adaptability to a wide range of tasks, making it a cornerstone of multimodal AI research.
